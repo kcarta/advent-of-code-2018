@@ -1,0 +1,14 @@
+{
+  "name": "puzzle_1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "puzzle.js",
+  "scripts": {
+    "test": "mocha -w"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "should": "^13.2.3"
+  }
+}
