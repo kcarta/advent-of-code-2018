@@ -16,4 +16,10 @@
     <ProjectReference Include="..\..\src\puzzle_1\puzzle_1.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Include="*.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
