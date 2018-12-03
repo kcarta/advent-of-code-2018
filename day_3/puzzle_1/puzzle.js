@@ -7,19 +7,17 @@ module.exports = Device;
 function Device() {
 
     Device.prototype.createFabric = () => {
-        return Array(1200).fill().map(() => Array(1200).fill(0));
+        return Array(1200).fill().map(() => Array(1200).fill({}));
     }
 
     Device.prototype.countOverlaps = (fabric) => {
         return fabric.reduce((row, acc) => acc.concat(row), [])
-            .filter((cell) => cell > 1).length;
+            .filter((cell) => cell.count > 1).length;
     }
 
     Device.prototype.logClaims = (claims, fabric) => {
         const recordedClaims = {};
         claims.forEach((claim) => {
-            // {x, y, w, h}
-            // fill every column as many as height (+y) has down, as many as the width (+x) has to the right
             const startX = claim.x;
             const endX = startX + claim.w
             const startY = claim.y;
@@ -27,11 +25,27 @@ function Device() {
             let hasNoOverlaps = true;
             for (let i = startX; i < endX; i++) {
                 for (let j = startY; j < endY; j++) {
-                    fabric[j][i] += 1;
+                    let currentCell = fabric[j][i];
+                    if (!Number.isInteger(currentCell.count)) {
+                        currentCell = { count: 0, ids: [] };
+                    }
+                    currentCell.count += 1;
+                    currentCell.ids.push(claim.id);
+                    if (currentCell.count > 1) {
+                        hasNoOverlaps = false;
+                        currentCell.ids.filter((id) => recordedClaims[id])
+                            .forEach((id) => recordedClaims[id].hasNoOverlaps = false);
+                    }
+                    fabric[j][i] = currentCell;
                 }
+            }
+            recordedClaims[claim.id] = {
+                id: claim.id,
+                hasNoOverlaps,
             }
         });
         return {
+            recordedClaims,
             fabric
         };
     }
