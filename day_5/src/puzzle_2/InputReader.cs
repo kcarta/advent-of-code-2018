@@ -2,9 +2,9 @@ using System.IO;
 
 public class InputReader
 {
-    public string[] ReadIds(string filePath)
+    public string ReadUnits(string filePath)
     {
-        return File.ReadAllLines(filePath);
+        return File.ReadAllText(filePath);
     }
 
 }

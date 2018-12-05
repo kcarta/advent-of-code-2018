@@ -1,29 +1,29 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 
-namespace puzzle_1
+namespace puzzle_2
 {
     class Program
     {
         static void Main(string[] args)
         {
             var inputReader = new InputReader();
-            var input = inputReader.ReadIds("input.txt");
+            var input = inputReader.ReadUnits("input.txt");
             var device = new Device();
-            var sortedRecords = device.ParseToSortedRecords(input);
-            var guardListings = device.LogMinutes(sortedRecords);
-            var maxGuard = guardListings.OrderByDescending(guard => guard.SleepMinutes.Count).First();
-            var maxMinute = maxGuard.SleepMinutes.GroupBy(count => count).OrderByDescending(group => group.Count()).Select(group => group.Key).First();
-            var maxId = guardListings.Select(guard => new
+            Dictionary<char, int> charCounts = new Dictionary<char, int>();
+            for (char character = 'a'; character <= 'z'; character++)
             {
-                GuardId = guard.Id,
-                GuardMaxMinute = guard.SleepMinutes.GroupBy(count => count)
-                                                   .OrderByDescending(group => group.Count())
-                                                   .Select(group => new { Minute = group.Key, Count = group.Count() })
-                                                   .FirstOrDefault()
-            }).OrderByDescending(combo => combo?.GuardMaxMinute?.Count).First();
-            Console.WriteLine($"{maxGuard.Id} slept most at minute {maxMinute}");
-            Console.WriteLine($"Max id is: {maxId.GuardId} who slept most at minute {maxId.GuardMaxMinute.Minute}");
+                var newInput = new string(input.Where(c => char.ToLower(c) != char.ToLower(character)).ToArray());
+                var count = device.Process(device.Parse(newInput)).Count;
+                charCounts.Add(character, count);
+            }
+            foreach (var pair in charCounts)
+            {
+                Console.WriteLine($"{pair.Key}: {pair.Value}");
+            }
+            var lowestCount = charCounts.Where(group => group.Value != 10638).OrderBy(group => group.Value).First().Value;
+            Console.WriteLine($"Lowest count is {lowestCount}");
         }
     }
 }

@@ -17,15 +17,15 @@ public class Device
         int index = 0;
         while (index < units.Count)
         {
-            if (units.ElementAt(index).ReactsWith(units.ElementAtOrDefault(index + 1)))
+            if (units.ElementAtOrDefault(index)?.ReactsWith(units.ElementAtOrDefault(index + 1)) ?? false)
             {
                 units.RemoveRange(index, 2);
-                index = 0;
+                index--;
             }
-            else if (units.ElementAt(index).ReactsWith(units.ElementAtOrDefault(index - 1)))
+            else if (units.ElementAtOrDefault(index)?.ReactsWith(units.ElementAtOrDefault(index - 1)) ?? false)
             {
                 units.RemoveRange(index - 1, 2);
-                index = 0;
+                index--;
             }
             else
             {
